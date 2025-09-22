@@ -4,12 +4,35 @@
   <title>My Canvas Page</title>
 </head>
 <body>
-  <canvas id="myCanvas" width="500" height="500"></canvas>
-  <script>
-    const canvas = document.getElementById('myCanvas');
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = 'red';
-    ctx.fillRect(50,50,100,100);
+  <header>
+  <h1>My Website</h1>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+</header>
+
+<style>
+/* CSS สำหรับ Header */
+header {
+  background-color: #333; /* สีพื้นหลัง */
+  color: white;          /* สีตัวอักษร */
+  padding: 20px;
+  text-align: center;
+}
+
+header nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+</style>
   </script>
 </body>
 </html>
