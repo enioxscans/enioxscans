@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ENIOXSCANS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Font Montserrat -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #121212;
+    color: #eee;
+    min-height:100vh;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  header {
+    width:100%;
+    text-align:center;
+    padding:20px;
+    background-color:#1a1a1a;
+  }
+  header h1 { font-size:2rem; margin-bottom:5px; }
+  header nav a {
+    color:#eee;
+    margin:0 15px;
+    text-decoration:none;
+    font-weight:bold;
+  }
+  header nav a:hover { text-decoration: underline; }
+
+  #login-box {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-top:50px;
+  }
+  #login-box input {
+    padding:10px;
+    margin:10px 0;
+    border:none;
+    border-radius:5px;
+    font-size:1rem;
+  }
+  #login-box button {
+    padding:10px 20px;
+    background-color:#333;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:1rem;
+  }
+  #login-message { color:#f55; margin-top:10px; }
+
+  #comic-container {
+    display:none;
+    width:100%;
+    max-width:900px;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .comic-page {
+    width:100%;
+    margin-bottom:20px;
+    border-radius:5px;
+    user-drag:none;
+    -webkit-user-drag:none;
+    pointer-events:none;
+  }
+
+  #nav-buttons {
+    display:flex;
+    justify-content:center;
+    margin:20px 0;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  #nav-buttons button {
+    padding:10px 20px;
+    background-color:#333;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:1rem;
+  }
+  #nav-buttons button:hover { background-color:#555; }
+
+  @media (max-width:600px){
+    header h1 { font-size:1.5rem; }
+    #nav-buttons button { padding:8px 15px; font-size:0.9rem; }
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ENIOXSCANS</h1>
+  <nav>
+    <a href="#">หน้าแรก</a>
+    <a href="#">ตอนใหม่</a>
+    <a href="#">ติดต่อ</a>
+  </nav>
+</header>
+
+<div id="login-box">
+  <input type="password" id="password" placeholder="ใส่รหัสผ่านเพื่ออ่าน">
+  <button onclick="checkPassword()">เข้าสู่เว็บตูน</button>
+  <p id="login-message"></p>
+</div>
+
+<div id="comic-container">
+  <!-- ตอนที่ 1 -->
+  <div class="episode" data-episode="1">
+    <img class="comic-page" data-src="https://via.placeholder.com/900x1200.png?text=EP1+Page+1" alt="EP1 Page 1">
+    <img class="comic-page" data-src="https://via.placeholder.com/900x1200.png?text=EP1+Page+2" alt="EP1 Page 2">
+  </div>
+  <!-- ตอนที่ 2 -->
+  <div class="episode" data-episode="2">
+    <img class="comic-page" data-src="https://via.placeholder.com/900x1200.png?text=EP2+Page+1" alt="EP2 Page 1">
+    <img class="comic-page" data-src="https://via.placeholder.com/900x1200.png?text=EP2+Page+2" alt="EP2 Page 2">
+  </div>
+
+  <!-- Navigation -->
+  <div id="nav-buttons">
+    <button onclick="prevPage()">⬅️ ก่อนหน้า</button>
+    <button onclick="nextPage()">ถัดไป ➡️</button>
+    <button onclick="prevEpisode()">⏮️ ตอนก่อนหน้า</button>
+    <button onclick="nextEpisode()">ตอนถัดไป ⏭️</button>
+  </div>
+</div>
+
+<script>
+let correctPassword = "1234"; // เปลี่ยนรหัสผ่าน
+let currentEpisode = 0;
+let currentPage = 0;
+const episodes = document.querySelectorAll('.episode');
+const loginBox = document.getElementById('login-box');
+const comicContainer = document.getElementById('comic-container');
+
+function showPage(){
+  const pages = episodes[currentEpisode].querySelectorAll('.comic-page');
+  pages.forEach((img,i)=>{
+    img.style.display = (i===currentPage)? 'block':'none';
+    // Lazy load
+    if(i===currentPage && !img.src) img.src = img.getAttribute('data-src');
+  });
+}
+
+function nextPage(){
+  const pages = episodes[currentEpisode].querySelectorAll('.comic-page');
+  if(currentPage<pages.length-1) currentPage++;
+  showPage();
+}
+
+function prevPage(){
+  if(currentPage>0) currentPage--;
+  showPage();
+}
+
+function nextEpisode(){
+  if(currentEpisode<episodes.length-1){
+    currentEpisode++;
+    currentPage=0;
+    showPage();
+  }
+}
+
+function prevEpisode(){
+  if(currentEpisode>0){
+    currentEpisode--;
+    currentPage=0;
+    showPage();
+  }
+}
+
+function checkPassword(){
+  const pw = document.getElementById('password').value;
+  const msg = document.getElementById('login-message');
+  if(pw===correctPassword){
+    loginBox.style.display='none';
+    comicContainer.style.display='flex';
+    currentEpisode=0;
+    currentPage=0;
+    showPage();
+  }else{
+    msg.textContent="รหัสผ่านไม่ถูกต้อง!";
+  }
+}
+
+// ป้องกันคลิกขวาและลาก
+document.addEventListener('contextmenu',e=>{if(e.target.tagName==='IMG') e.preventDefault();});
+document.addEventListener('dragstart',e=>{if(e.target.tagName==='IMG') e.preventDefault();});
+</script>
+</body>
+</html>
